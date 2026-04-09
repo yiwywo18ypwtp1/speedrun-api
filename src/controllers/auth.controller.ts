@@ -1,22 +1,14 @@
 import type { Request, Response } from 'express';
 import * as authService from '../services/auth.service'
-import e from 'express';
 
-interface SignupBody {
-    username: string;
-    password: string;
-};
+import { SignupUser, LoginUser } from "../types/auth"
 
-interface LoginBody {
-    username: string;
-    password: string;
-}
 
-export const signup = async (req: Request<SignupBody>, res: Response) => {
-    const { username, password } = req.body;
+export const signup = async (req: Request<SignupUser>, res: Response) => {
+    const { username, password, name } = req.body;
 
     try {
-        const result = await authService.signup({ username, password });
+        const result = await authService.signup({ username, password, name });
         res.json(result);
 
     } catch (err: any) {
@@ -26,7 +18,7 @@ export const signup = async (req: Request<SignupBody>, res: Response) => {
     }
 }
 
-export const login = async (req: Request<LoginBody>, res: Response) => {
+export const login = async (req: Request<LoginUser>, res: Response) => {
     const { username, password } = req.body;
 
     try {

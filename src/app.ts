@@ -2,6 +2,7 @@ import 'dotenv/config'
 import express from "express"
 import authRouter from "./routes/auth.router";
 
+
 const app = express();
 const PORT = 5001;
 

@@ -2,17 +2,10 @@ import { prisma } from "../db";
 import { checkPass, hashPass } from "../middlewares/hashPassword";
 import { generate_token } from "../middlewares/JWTAuth";
 
-interface signupSchema {
-    username: string;
-    password: string;
-}
+import { SignupUser, LoginUser } from "../types/auth"
 
-interface LoginSchema {
-    username: string;
-    password: string;
-}
 
-export const signup = async ({ username, password }: signupSchema) => {
+export const signup = async ({ username, password, name }: SignupUser) => {
     const existingUser = await prisma.user.findUnique({
         where: { username },
     });
@@ -27,17 +20,20 @@ export const signup = async ({ username, password }: signupSchema) => {
         data: {
             username: username,
             password: hashedPassword,
+            name: name,
         },
     });
 
     return {
         "created_user": {
-            "user": user.username,
+            "id": user.id,
+            "userame": user.username,
+            "name": user.name,
         },
     }
 }
 
-export const login = async ({ username, password }: LoginSchema) => {
+export const login = async ({ username, password }: LoginUser) => {
     const existUser = await prisma.user.findUnique({
         where: {
             username: username,
@@ -48,5 +44,5 @@ export const login = async ({ username, password }: LoginSchema) => {
 
     await checkPass(password, existUser.password);
 
-    return await generate_token({ username: existUser.username });
+    return await generate_token({ id: existUser.id, username: existUser.username, name: existUser.name });
 }

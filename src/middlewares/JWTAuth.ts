@@ -1,14 +1,13 @@
 import type { Request, Response, NextFunction } from "express"
 import jwt from "jsonwebtoken"
 
+import { PublicUser } from "../types/auth"
+
+
 const ALGORITHM = "HS256"
 const secretKey = process.env.JWT_SECRET_KEY || "secret"
 
-interface User {
-    username: string;
-}
-
-export const generate_token = async (data: User) => {
+export const generate_token = async (data: PublicUser) => {
     const token = jwt.sign(
         data,
         secretKey,
