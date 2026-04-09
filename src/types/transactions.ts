@@ -7,4 +7,7 @@ export type Transaction = {
 }
 
 export type CreateTransaction = Omit<Transaction, "id">
+
+export type UpdateTransaction = Pick<Transaction, "amount" | "type" | "category">
+
 export type TransactionId = string
