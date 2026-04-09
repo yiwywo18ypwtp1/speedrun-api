@@ -9,5 +9,13 @@ interface SignupBody {
 export const signup = async (req: Request<SignupBody>, res: Response) => {
     const { username, password } = req.body;
 
-    res.json(await authService.signup({ username, password }));
+    try {
+        const result = await authService.signup({ username, password });
+        res.json(result);
+
+    } catch (err: any) {
+        res.status(err.status || 500).json({
+            message: err.message,
+        });
+    }
 }
