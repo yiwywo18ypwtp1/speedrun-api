@@ -40,7 +40,7 @@ export const login = async ({ username, password }: LoginUser) => {
         },
     })
 
-    if (!existUser) throw { message: "Invalid login", status: 404 }
+    if (!existUser) throw { message: "No User with this username exists", status: 404 };
 
     await checkPass(password, existUser.password);
 
