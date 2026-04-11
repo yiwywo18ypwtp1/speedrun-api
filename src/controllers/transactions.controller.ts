@@ -1,12 +1,7 @@
 import { Request, Response } from "express";
 
 import * as transactionService from "../services/transaction.service"
-import { UpdateTransaction } from "../types/transactions";
 
-
-interface Params {
-    id: string;
-}
 
 export const createTransaction = async (req: Request, res: Response) => {
     const { amount, type, category } = req.body

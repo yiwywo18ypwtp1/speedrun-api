@@ -28,7 +28,9 @@ export const findById = async (id: TransactionId) => {
     })
 
     if (!transaction) {
-        throw { message: "Transaction not found", status: 404 }
+        const err = new Error("Transaction not found") as any;
+        err.status = 404;
+        throw err;
     }
 
     return transaction;
@@ -41,7 +43,9 @@ export const update = async (id: TransactionId, data: UpdateTransaction) => {
     })
 
     if (!transaction) {
-        throw { message: "Transaction not found", status: 404 }
+        const err = new Error("Transaction not found") as any;
+        err.status = 404;
+        throw err;
     }
 
     return transaction;
@@ -53,7 +57,9 @@ export const _delete = async (id: TransactionId) => {
     })
 
     if (!existing) {
-        throw { message: "Transaction not found", status: 404 }
+        const err = new Error("Transaction not found") as any;
+        err.status = 404;
+        throw err;
     }
 
     await prisma.transaction.delete({

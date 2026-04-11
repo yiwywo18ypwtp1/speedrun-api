@@ -5,7 +5,12 @@ import { PublicUser } from "../types/auth"
 
 
 const ALGORITHM = "HS256"
-const secretKey = process.env.JWT_SECRET_KEY || "secret"
+
+if (!process.env.JWT_SECRET_KEY)
+    throw new Error('JWT_SECRET_KEY is not set');
+
+const secretKey = process.env.JWT_SECRET_KEY
+
 
 export const generate_token = async (data: PublicUser) => {
     const token = jwt.sign(
@@ -28,22 +33,26 @@ export const authMiddleware = (
     const authHeader = req.headers.authorization
 
     if (!authHeader) {
-        return res.status(401).json({ message: "No token provided" })
+        const err = new Error("No token provided") as any;
+        err.status = 401;
+        throw err;
     }
 
     const token = authHeader.split(" ")[1]
 
     if (!token) {
-        return res.status(401).json({ message: "Invalid token format" })
+        const err = new Error("Invalid token format") as any;
+        err.status = 401;
+        throw err;
     }
 
     try {
-        const decoded = jwt.verify(token, secretKey)
-
-            ; (req as any).user = decoded
+        const decoded = jwt.verify(token, secretKey);
+        (req as any).user = decoded
 
         next()
-    } catch (err) {
-        return res.status(401).json({ message: "Invalid or expired token" })
+    } catch (err: any) {
+        err.status = 401;
+        throw err;
     }
 }

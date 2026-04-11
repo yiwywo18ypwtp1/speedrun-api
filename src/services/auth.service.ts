@@ -11,7 +11,9 @@ export const signup = async ({ username, password, name }: SignupUser) => {
     });
 
     if (existingUser) {
-        throw { message: 'User already exists', status: 409 };
+        const err = new Error('User already exists') as any;
+        err.status = 409;
+        throw err;
     }
 
     const hashedPassword = await hashPass(password);
@@ -27,7 +29,7 @@ export const signup = async ({ username, password, name }: SignupUser) => {
     return {
         "created_user": {
             "id": user.id,
-            "userame": user.username,
+            "username": user.username,
             "name": user.name,
         },
     }
@@ -40,7 +42,11 @@ export const login = async ({ username, password }: LoginUser) => {
         },
     })
 
-    if (!existUser) throw { message: "No User with this username exists", status: 404 };
+    if (!existUser) {
+        const err = new Error("No User with this username exists") as any;
+        err.status = 404;
+        throw err;
+    }
 
     await checkPass(password, existUser.password);
 
